@@ -1,0 +1,204 @@
+/* TALLY NODE 커스텀 스타일 */
+
+/* 펌웨어 업로드 페이지 스타일 */
+.firmware-upload-container {
+    max-width: 480px;
+    margin: 2rem auto;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+}
+
+.firmware-upload-header {
+    padding: 32px 24px 24px;
+    text-align: center;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.firmware-upload-header h1 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #1a202c;
+    margin-bottom: 4px;
+}
+
+.firmware-upload-subtitle {
+    font-size: 14px;
+    color: #718096;
+}
+
+.firmware-upload-content {
+    padding: 32px 24px;
+}
+
+.firmware-form-section {
+    margin-bottom: 32px;
+}
+
+.firmware-form-section h2 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #374151;
+}
+
+.firmware-radio-group {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+@media (max-width: 600px) {
+    .firmware-radio-group {
+        flex-direction: column;
+        gap: 8px;
+    }
+}
+
+.firmware-radio-option {
+    flex: 1;
+    position: relative;
+}
+
+.firmware-radio-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.firmware-radio-option label {
+    display: block;
+    padding: 16px 12px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    font-weight: 500;
+    font-size: 14px;
+    color: #4a5568;
+    transition: all 0.2s ease;
+    background: #fafafa;
+}
+
+.firmware-radio-option input[type="radio"]:checked + label {
+    border-color: #3182ce;
+    background: #3182ce;
+    color: white;
+}
+
+.firmware-radio-option label:hover {
+    border-color: #cbd5e0;
+}
+
+.firmware-install-section {
+    text-align: center;
+    padding: 24px 0 0;
+    border-top: 1px solid #e2e8f0;
+}
+
+.firmware-install-section esp-web-install-button {
+    display: block;
+    margin-bottom: 24px;
+}
+
+.firmware-install-section esp-web-install-button button {
+    background: #3182ce !important;
+    color: white !important;
+    border: none !important;
+    padding: 14px 32px !important;
+    border-radius: 8px !important;
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    cursor: pointer !important;
+    transition: background-color 0.2s ease !important;
+    width: 100% !important;
+}
+
+.firmware-install-section esp-web-install-button button:hover {
+    background: #2c5aa0 !important;
+}
+
+.firmware-info-box {
+    background: #f7fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 16px;
+    text-align: left;
+}
+
+.firmware-info-box h3 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #2d3748;
+}
+
+.firmware-info-box p {
+    font-size: 13px;
+    color: #4a5568;
+    margin: 6px 0;
+    line-height: 1.5;
+}
+
+/* 그리드 카드 스타일 개선 */
+.md-typeset .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: 1rem;
+    margin: 1em 0;
+}
+
+.md-typeset .grid.cards > .card {
+    border: 1px solid var(--md-default-fg-color--lightest);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    transition: all 0.2s ease;
+}
+
+.md-typeset .grid.cards > .card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+/* 다크 모드 지원 */
+[data-md-color-scheme="slate"] .firmware-upload-container {
+    background: #2d3748;
+    border-color: #4a5568;
+}
+
+[data-md-color-scheme="slate"] .firmware-upload-header {
+    border-bottom-color: #4a5568;
+}
+
+[data-md-color-scheme="slate"] .firmware-upload-header h1 {
+    color: #e2e8f0;
+}
+
+[data-md-color-scheme="slate"] .firmware-upload-subtitle {
+    color: #a0aec0;
+}
+
+[data-md-color-scheme="slate"] .firmware-form-section h2 {
+    color: #e2e8f0;
+}
+
+[data-md-color-scheme="slate"] .firmware-radio-option label {
+    background: #4a5568;
+    border-color: #718096;
+    color: #e2e8f0;
+}
+
+[data-md-color-scheme="slate"] .firmware-info-box {
+    background: #4a5568;
+    border-color: #718096;
+}
+
+[data-md-color-scheme="slate"] .firmware-info-box h3 {
+    color: #e2e8f0;
+}
+
+[data-md-color-scheme="slate"] .firmware-info-box p {
+    color: #a0aec0;
+}

@@ -1,0 +1,16 @@
+{
+    "name": "TALLY NODE Master 400MHz",
+    "version": "1.0.0",
+    "new_install_prompt_erase": true,
+    "builds": [
+        {
+            "chipFamily": "ESP32-S3",
+            "parts": [
+                { "path": "data/m400/bootloader.bin", "offset": 0 },
+                { "path": "data/m400/partitions.bin", "offset": 32768 },
+                { "path": "data/m400/firmware.bin", "offset": 65536 },
+                { "path": "data/m400/spiffs.bin", "offset": 2686976 }
+            ]
+        }
+    ]
+}
