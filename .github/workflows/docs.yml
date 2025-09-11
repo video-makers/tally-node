@@ -64,6 +64,9 @@ jobs:
         # data 폴더를 site로 복사  
         cp -r data site/
         
+        # 독립적인 펌웨어 업로드 페이지 복사
+        cp firmware_upload.html site/
+        
         # index.html 백업 파일도 복사 (필요시)
         cp index.html site/index_backup.html
         
