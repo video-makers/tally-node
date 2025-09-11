@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TALLY NODE 펌웨어 업로드</title>
+    <title>ESP32-S3 TALLY NODE 펌웨어 업로드</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -16,8 +16,8 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f7fa;
             color: #2d3748;
             line-height: 1.6;
             min-height: 100vh;
@@ -29,50 +29,33 @@
         
         .container {
             width: 100%;
-            max-width: 520px;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
+            max-width: 480px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
         }
         
         .header {
-            padding: 40px 30px 30px;
+            padding: 32px 24px 24px;
             text-align: center;
             border-bottom: 1px solid #e2e8f0;
         }
         
-        .logo {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 15px;
-            margin: 0 auto 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 24px;
-            font-weight: 700;
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-        }
-        
         h1 {
-            font-size: 28px;
-            font-weight: 700;
+            font-size: 24px;
+            font-weight: 600;
             color: #1a202c;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
         }
         
         .subtitle {
-            font-size: 16px;
+            font-size: 14px;
             color: #718096;
-            font-weight: 500;
         }
         
         .content {
-            padding: 40px 30px;
+            padding: 32px 24px;
         }
         
         .form-section {
@@ -80,28 +63,20 @@
         }
         
         .form-section h2 {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            color: #374151;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .form-section h2::before {
-            content: '⚙️';
             font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #374151;
         }
         
         .radio-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
+            display: flex;
+            gap: 12px;
             margin-bottom: 24px;
         }
         
         .radio-option {
+            flex: 1;
             position: relative;
         }
         
@@ -114,259 +89,125 @@
         
         .radio-option label {
             display: block;
-            padding: 20px 16px;
+            padding: 16px 12px;
             border: 2px solid #e2e8f0;
-            border-radius: 12px;
+            border-radius: 8px;
             cursor: pointer;
             text-align: center;
-            font-weight: 600;
-            font-size: 15px;
+            font-weight: 500;
+            font-size: 14px;
             color: #4a5568;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             background: #fafafa;
-            position: relative;
-        }
-
-        .radio-option label::before {
-            content: '';
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            width: 20px;
-            height: 20px;
-            border: 2px solid #cbd5e0;
-            border-radius: 50%;
-            transition: all 0.3s ease;
         }
         
         .radio-option input[type="radio"]:checked + label {
-            border-color: #667eea;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-color: #3182ce;
+            background: #3182ce;
             color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
-        }
-
-        .radio-option input[type="radio"]:checked + label::before {
-            background: white;
-            border-color: white;
-        }
-
-        .radio-option input[type="radio"]:checked + label::after {
-            content: '✓';
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            color: #667eea;
-            font-size: 12px;
-            font-weight: bold;
         }
         
         .radio-option label:hover {
-            border-color: #667eea;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+            border-color: #cbd5e0;
         }
         
         .install-section {
             text-align: center;
-            padding: 30px 0 0;
+            padding: 24px 0 0;
             border-top: 1px solid #e2e8f0;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #3182ce;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
         }
         
         esp-web-install-button {
             display: block;
-            margin-bottom: 30px;
+            margin-bottom: 24px;
         }
         
         esp-web-install-button button {
-            background: linear-gradient(135deg, #667eea, #764ba2) !important;
+            background: #3182ce !important;
             color: white !important;
             border: none !important;
-            padding: 18px 40px !important;
-            border-radius: 12px !important;
-            font-size: 18px !important;
-            font-weight: 600 !important;
+            padding: 14px 32px !important;
+            border-radius: 8px !important;
+            font-size: 16px !important;
+            font-weight: 500 !important;
             cursor: pointer !important;
-            transition: all 0.3s ease !important;
+            transition: background-color 0.2s ease !important;
             width: 100% !important;
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3) !important;
         }
         
         esp-web-install-button button:hover {
-            transform: translateY(-2px) !important;
-            box-shadow: 0 12px 24px rgba(102, 126, 234, 0.4) !important;
-        }
-
-        esp-web-install-button button:active {
-            transform: translateY(0) !important;
+            background: #2c5aa0 !important;
         }
         
         .info-box {
-            background: linear-gradient(135deg, #f7fafc, #edf2f7);
+            background: #f7fafc;
             border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 24px;
+            border-radius: 8px;
+            padding: 16px;
             text-align: left;
         }
         
         .info-box h3 {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 600;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
             color: #2d3748;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .info-box h3::before {
-            content: '📋';
-            font-size: 16px;
         }
         
         .info-box p {
-            font-size: 14px;
-            color: #4a5568;
-            margin: 8px 0;
-            line-height: 1.6;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .info-box p::before {
-            content: '✓';
-            color: #48bb78;
-            font-weight: bold;
-            font-size: 12px;
-        }
-
-        .frequency-warning {
-            background: linear-gradient(135deg, #fed7d7, #fbb6ce);
-            border: 1px solid #fc8181;
-            border-radius: 12px;
-            padding: 16px;
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .frequency-warning h4 {
-            color: #c53030;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .frequency-warning h4::before {
-            content: '⚠️';
-        }
-
-        .frequency-warning p {
-            color: #742a2a;
             font-size: 13px;
-            margin: 0;
+            color: #4a5568;
+            margin: 6px 0;
+            line-height: 1.5;
         }
 
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 500;
-            margin-bottom: 20px;
-            padding: 8px 16px;
+        .warning-box {
+            background: #fef5e7;
+            border: 1px solid #f6e05e;
             border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .back-link:hover {
-            background: rgba(102, 126, 234, 0.1);
-            transform: translateX(-2px);
-        }
-
-        .back-link::before {
-            content: '←';
-            font-size: 16px;
+            padding: 12px;
+            margin-top: 16px;
+            font-size: 13px;
+            color: #744210;
         }
         
         @media (max-width: 600px) {
             body {
-                padding: 16px;
+                padding: 12px;
             }
             
             .container {
                 max-width: none;
-                border-radius: 16px;
             }
             
             .header {
-                padding: 32px 24px 24px;
+                padding: 24px 20px 20px;
             }
             
             .content {
-                padding: 32px 24px;
+                padding: 24px 20px;
             }
             
             .radio-group {
-                grid-template-columns: 1fr;
-                gap: 12px;
+                flex-direction: column;
+                gap: 8px;
             }
             
             h1 {
-                font-size: 24px;
-            }
-
-            .radio-option label {
-                padding: 16px 12px;
-            }
-        }
-
-        /* 다크 모드 지원 */
-        @media (prefers-color-scheme: dark) {
-            body {
-                background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
-            }
-
-            .container {
-                background: rgba(45, 55, 72, 0.95);
-                border-color: rgba(255, 255, 255, 0.1);
-            }
-
-            h1, .form-section h2, .info-box h3 {
-                color: #f7fafc;
-            }
-
-            .subtitle {
-                color: #cbd5e0;
-            }
-
-            .radio-option label {
-                background: #4a5568;
-                border-color: #718096;
-                color: #e2e8f0;
-            }
-
-            .info-box {
-                background: linear-gradient(135deg, #4a5568, #2d3748);
-                border-color: #718096;
-            }
-
-            .info-box p {
-                color: #cbd5e0;
-            }
-
-            .back-link {
-                color: #90cdf4;
-            }
-
-            .back-link:hover {
-                background: rgba(144, 205, 244, 0.2);
+                font-size: 20px;
             }
         }
     </style>
@@ -374,60 +215,58 @@
 <body>
     <div class="container">
         <div class="header">
-            <div class="logo">TN</div>
-            <h1>TALLY NODE</h1>
+            <h1>ESP32-S3 TALLY NODE</h1>
             <div class="subtitle">펌웨어 업로드 도구</div>
         </div>
         
         <div class="content">
-            <a href="/" class="back-link">문서 사이트로 돌아가기</a>
+            <a href="/" class="back-link">← 문서 사이트로 돌아가기</a>
 
             <div class="form-section">
-                <h2>디바이스 모드</h2>
+                <h2>디바이스 모드 선택</h2>
                 <div class="radio-group">
                     <div class="radio-option">
                         <input type="radio" id="master" name="mode" value="master" checked onchange="updateFirmwareInfo()">
-                        <label for="master">마스터<br><small>송신기</small></label>
+                        <label for="master">마스터 (송신기)</label>
                     </div>
                     <div class="radio-option">
                         <input type="radio" id="receiver" name="mode" value="receiver" onchange="updateFirmwareInfo()">
-                        <label for="receiver">리시버<br><small>수신기</small></label>
+                        <label for="receiver">리시버 (수신기)</label>
                     </div>
                 </div>
             </div>
 
             <div class="form-section">
-                <h2>주파수 대역</h2>
+                <h2>주파수 선택</h2>
                 <div class="radio-group">
                     <div class="radio-option">
                         <input type="radio" id="freq400" name="frequency" value="400" onchange="updateFirmwareInfo()">
-                        <label for="freq400">400MHz<br><small>433MHz 대역</small></label>
+                        <label for="freq400">400MHz</label>
                     </div>
                     <div class="radio-option">
                         <input type="radio" id="freq900" name="frequency" value="900" checked onchange="updateFirmwareInfo()">
-                        <label for="freq900">900MHz<br><small>915MHz 대역</small></label>
+                        <label for="freq900">900MHz</label>
                     </div>
                 </div>
                 
-                <div class="frequency-warning">
-                    <h4>주파수 대역 주의사항</h4>
-                    <p>마스터와 리시버는 동일한 주파수 대역을 사용해야 합니다</p>
+                <div class="warning-box">
+                    ⚠️ <strong>주의:</strong> 마스터와 리시버는 동일한 주파수 대역을 사용해야 합니다
                 </div>
             </div>
             
             <div class="install-section">
                 <esp-web-install-button manifest="manifest_master_900.json">
-                    <button slot="activate">🚀 펌웨어 설치하기</button>
-                    <span slot="unsupported">❌ 이 브라우저는 지원되지 않습니다. Chrome을 사용하세요.</span>
-                    <span slot="not-allowed">🔒 시리얼 포트 권한이 필요합니다.</span>
+                    <button slot="activate">펌웨어 설치하기</button>
+                    <span slot="unsupported">이 브라우저는 지원되지 않습니다. Chrome을 사용하세요.</span>
+                    <span slot="not-allowed">시리얼 포트 권한이 필요합니다.</span>
                 </esp-web-install-button>
                 
                 <div class="info-box">
                     <h3>설치 전 준비사항</h3>
-                    <p>Chrome, Edge, Opera 브라우저 사용</p>
-                    <p>ESP32-S3를 USB로 연결</p>
-                    <p>부트 모드 진입: BOOT 버튼 누른 상태로 RESET 버튼 누르기</p>
-                    <p>데이터 전송 지원 USB-C 케이블 사용</p>
+                    <p>• Chrome, Edge, Opera 브라우저 사용</p>
+                    <p>• ESP32-S3를 USB로 연결</p>
+                    <p>• 부트 모드 진입: BOOT 버튼 누른 상태로 RESET 버튼 누르기</p>
+                    <p>• 데이터 전송 지원 USB-C 케이블 사용</p>
                 </div>
             </div>
         </div>
