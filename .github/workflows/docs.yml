@@ -60,6 +60,7 @@ jobs:
       run: |
         # manifest 파일들을 site 루트로 복사
         cp manifest_*.json site/
+        cp test_manifest.json site/
         
         # data 폴더를 site로 복사  
         cp -r data site/
