@@ -3,272 +3,657 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ESP32-S3 TALLY NODE 펌웨어 업로드</title>
+    <title>ESP32-S3 TALLY NODE | 펌웨어 업로드</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script type="module" src="https://unpkg.com/esp-web-tools@10.0.1/dist/web/install-button.js?module"></script>
+    <meta name="color-scheme" content="dark light">
+    <meta name="description" content="브라우저에서 ESP32-S3 TALLY NODE 펌웨어를 바로 업로드하세요.">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: #f5f7fa;
-            color: #2d3748;
-            line-height: 1.6;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #020617;
+            background-image: radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.16), transparent 45%),
+                radial-gradient(circle at 80% 0%, rgba(14, 165, 233, 0.18), transparent 55%),
+                radial-gradient(circle at 50% 100%, rgba(34, 211, 238, 0.08), transparent 60%);
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            color: #e2e8f0;
         }
-        
-        .container {
+        ::selection {
+            background-color: #38bdf8;
+            color: #020617;
+        }
+        .canvas-glow {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: -1;
+        }
+        .canvas-glow div {
+            position: absolute;
+            border-radius: 9999px;
+            filter: blur(140px);
+            opacity: 0.55;
+        }
+        .canvas-glow .glow-a { width: 420px; height: 420px; left: -120px; top: -120px; background: rgba(56, 189, 248, 0.5); }
+        .canvas-glow .glow-b { width: 380px; height: 380px; right: -140px; top: 18%; background: rgba(14, 165, 233, 0.35); }
+        .canvas-glow .glow-c { width: 320px; height: 320px; right: 25%; bottom: -160px; background: rgba(16, 185, 129, 0.28); }
+
+        .step-trigger {
+            display: block;
             width: 100%;
-            max-width: 480px;
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            border: 1px solid #e2e8f0;
-        }
-        
-        .header {
-            padding: 32px 24px 24px;
-            text-align: center;
-            border-bottom: 1px solid #e2e8f0;
-        }
-        
-        h1 {
-            font-size: 24px;
-            font-weight: 600;
-            color: #1a202c;
-            margin-bottom: 4px;
-        }
-        
-        .subtitle {
-            font-size: 14px;
-            color: #718096;
-        }
-        
-        .content {
-            padding: 32px 24px;
-        }
-        
-        .form-section {
-            margin-bottom: 32px;
-        }
-        
-        .form-section h2 {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 16px;
-            color: #374151;
-        }
-        
-        .radio-group {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-        
-        .radio-option {
-            flex: 1;
+            text-align: left;
+            border-radius: 22px;
+            padding: 1.35rem 1.5rem;
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            background: rgba(15, 23, 42, 0.65);
+            color: rgba(226, 232, 240, 0.85);
+            transition: transform 160ms ease, border-color 160ms ease, box-shadow 200ms ease, background 200ms ease;
             position: relative;
         }
-        
-        .radio-option input[type="radio"] {
-            position: absolute;
-            opacity: 0;
-            width: 0;
-            height: 0;
+        .step-trigger:hover {
+            transform: translateY(-2px);
+            border-color: rgba(56, 189, 248, 0.4);
         }
-        
-        .radio-option label {
-            display: block;
-            padding: 16px 12px;
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            cursor: pointer;
-            text-align: center;
-            font-weight: 500;
-            font-size: 14px;
-            color: #4a5568;
-            transition: all 0.2s ease;
-            background: #fafafa;
+        .step-trigger[data-state="active"] {
+            border-color: rgba(56, 189, 248, 0.65);
+            background: rgba(15, 23, 42, 0.92);
+            color: #f8fafc;
+            box-shadow: 0 14px 38px rgba(56, 189, 248, 0.22);
         }
-        
-        .radio-option input[type="radio"]:checked + label {
-            border-color: #3182ce;
-            background: #3182ce;
-            color: white;
+        .step-trigger[data-state="complete"] {
+            border-color: rgba(101, 221, 167, 0.55);
+            background: rgba(22, 101, 52, 0.22);
         }
-        
-        .radio-option label:hover {
-            border-color: #cbd5e0;
+        .step-trigger[data-state="locked"] {
+            opacity: 0.35;
+            cursor: not-allowed;
+            pointer-events: none;
         }
-        
-        .install-section {
-            text-align: center;
-            padding: 24px 0 0;
-            border-top: 1px solid #e2e8f0;
-        }
-        
-        esp-web-install-button {
-            display: block;
-            margin-bottom: 24px;
-        }
-        
-        esp-web-install-button button {
-            background: #3182ce !important;
-            color: white !important;
-            border: none !important;
-            padding: 14px 32px !important;
-            border-radius: 8px !important;
-            font-size: 16px !important;
-            font-weight: 500 !important;
-            cursor: pointer !important;
-            transition: background-color 0.2s ease !important;
-            width: 100% !important;
-        }
-        
-        esp-web-install-button button:hover {
-            background: #2c5aa0 !important;
-        }
-        
-        .info-box {
-            background: #f7fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 16px;
-            text-align: left;
-        }
-        
-        .info-box h3 {
-            font-size: 14px;
+        .step-index {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.6rem;
+            height: 2.6rem;
+            border-radius: 9999px;
+            background: rgba(30, 41, 59, 0.9);
+            color: rgba(148, 163, 184, 0.85);
             font-weight: 600;
-            margin-bottom: 12px;
-            color: #2d3748;
+            font-size: 0.95rem;
+            transition: all 160ms ease;
+            margin-right: 1rem;
         }
-        
-        .info-box p {
-            font-size: 13px;
-            color: #4a5568;
-            margin: 6px 0;
-            line-height: 1.5;
+        .step-trigger[data-state="active"] .step-index {
+            background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
+            color: #082f49;
+            box-shadow: 0 0 0 6px rgba(56, 189, 248, 0.18);
         }
-        
-        @media (max-width: 600px) {
-            body {
-                padding: 12px;
+        .step-trigger[data-state="complete"] .step-index {
+            background: rgba(34, 197, 94, 0.22);
+            color: #22c55e;
+            box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.15);
+        }
+
+        .step-panel {
+            display: none;
+            border-radius: 28px;
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            background: rgba(2, 6, 23, 0.7);
+            box-shadow: 0 22px 60px rgba(15, 23, 42, 0.45);
+            padding: clamp(2.75rem, 3vw, 3.25rem);
+            position: relative;
+            overflow: hidden;
+        }
+        .step-panel::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.12), transparent 55%);
+            opacity: 0;
+            transition: opacity 220ms ease;
+            pointer-events: none;
+        }
+        .step-panel.is-visible::before {
+            opacity: 1;
+        }
+        .step-panel.is-visible {
+            display: block;
+            animation: floatIn 260ms ease;
+        }
+        @keyframes floatIn {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .panel-heading {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            margin-bottom: 1.75rem;
+        }
+        .panel-heading span {
+            font-size: 0.75rem;
+            letter-spacing: 0.32em;
+            text-transform: uppercase;
+            color: rgba(148, 163, 184, 0.7);
+        }
+        .panel-heading h2 {
+            font-size: clamp(1.4rem, 2vw, 1.75rem);
+            font-weight: 600;
+            color: #f8fafc;
+        }
+
+        .selection-card {
+            position: relative;
+            display: block;
+            cursor: pointer;
+            height: 100%;
+        }
+        .selection-card input[type="radio"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .selection-card .card-surface {
+            position: relative;
+            height: 100%;
+            border-radius: 24px;
+            border: 1px solid rgba(71, 85, 105, 0.45);
+            background: rgba(15, 23, 42, 0.88);
+            padding: 1.9rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            transition: transform 180ms ease, border-color 160ms ease, box-shadow 220ms ease, background 220ms ease;
+        }
+        .selection-card .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+        .selection-card .card-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.35rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            background: rgba(71, 85, 105, 0.35);
+            color: rgba(226, 232, 240, 0.75);
+        }
+        .selection-card .card-description {
+            font-size: 0.92rem;
+            line-height: 1.55;
+            color: rgba(191, 219, 254, 0.82);
+        }
+        .selection-card .card-indicator {
+            margin-top: auto;
+            font-size: 0.78rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: rgba(56, 189, 248, 0.9);
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity 160ms ease, transform 160ms ease;
+        }
+        .selection-card:hover .card-surface {
+            transform: translateY(-3px);
+            border-color: rgba(56, 189, 248, 0.4);
+        }
+        .selection-card input[type="radio"]:checked + .card-surface {
+            border-color: rgba(56, 189, 248, 0.7);
+            background: linear-gradient(135deg, rgba(8, 145, 178, 0.18) 0%, rgba(14, 116, 144, 0.08) 55%, rgba(15, 23, 42, 0.95) 100%);
+            box-shadow: 0 18px 48px rgba(56, 189, 248, 0.2);
+        }
+        .selection-card input[type="radio"]:checked + .card-surface .card-indicator {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .selection-card input[type="radio"]:focus-visible + .card-surface {
+            outline: 2px solid rgba(56, 189, 248, 0.9);
+            outline-offset: 4px;
+        }
+
+        .quick-nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-radius: 18px;
+            padding: 0.55rem 0.9rem;
+            font-size: 0.82rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            background: rgba(51, 65, 85, 0.55);
+            color: rgba(226, 232, 240, 0.85);
+            border: 1px solid rgba(71, 85, 105, 0.55);
+            transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
+        }
+        .quick-nav-btn:hover {
+            background: rgba(56, 189, 248, 0.18);
+            border-color: rgba(56, 189, 248, 0.4);
+            transform: translateY(-1px);
+        }
+        .quick-nav-btn[disabled] {
+            opacity: 0.4;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .install-button {
+            width: 100%;
+            border-radius: 18px;
+            padding: 1.05rem;
+            font-size: 1rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 50%, #06b6d4 100%);
+            color: #0b1120;
+            border: none;
+            box-shadow: 0 22px 60px rgba(14, 165, 233, 0.45);
+            transition: transform 160ms ease, box-shadow 200ms ease, filter 160ms ease;
+        }
+        .install-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 30px 70px rgba(14, 165, 233, 0.55);
+            filter: brightness(1.02);
+        }
+        .install-button:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+            box-shadow: none;
+            background: rgba(15, 23, 42, 0.8);
+            color: rgba(148, 163, 184, 0.9);
+            border: 1px solid rgba(71, 85, 105, 0.5);
+        }
+
+        .callout {
+            border-radius: 22px;
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            background: rgba(15, 23, 42, 0.72);
+            padding: 1.75rem;
+            box-shadow: 0 16px 40px rgba(15, 23, 42, 0.4);
+        }
+        .callout h3 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #f8fafc;
+            margin-bottom: 0.9rem;
+        }
+        .callout ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            gap: 0.55rem;
+        }
+        .callout ul li {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            font-size: 0.92rem;
+            color: rgba(226, 232, 240, 0.78);
+        }
+        .callout ul li::before {
+            content: '•';
+            color: rgba(56, 189, 248, 0.8);
+        }
+
+        .support-note {
+            font-size: 0.88rem;
+            color: rgba(148, 163, 184, 0.75);
+            margin-top: 0.9rem;
+        }
+
+        @media (max-width: 1024px) {
+            .step-panel {
+                padding: 2.35rem 1.85rem;
             }
-            
-            .container {
-                max-width: none;
+        }
+        @media (max-width: 640px) {
+            .step-trigger {
+                padding: 1.1rem 1.2rem;
             }
-            
-            .header {
-                padding: 24px 20px 20px;
+            .step-index {
+                width: 2.2rem;
+                height: 2.2rem;
             }
-            
-            .content {
-                padding: 24px 20px;
-            }
-            
-            .radio-group {
-                flex-direction: column;
-                gap: 8px;
-            }
-            
-            h1 {
-                font-size: 20px;
+            .selection-card .card-surface {
+                padding: 1.6rem;
             }
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>ESP32-S3 TALLY NODE</h1>
-            <div class="subtitle">펌웨어 업로드 도구</div>
-        </div>
-        
-        <div class="content">
-            <div class="form-section">
-                <h2>디바이스 모드 선택</h2>
-                <div class="radio-group">
-                    <div class="radio-option">
-                        <input type="radio" id="master" name="mode" value="master" checked onchange="updateFirmwareInfo()">
-                        <label for="master">마스터 (송신기)</label>
-                    </div>
-                    <div class="radio-option">
-                        <input type="radio" id="receiver" name="mode" value="receiver" onchange="updateFirmwareInfo()">
-                        <label for="receiver">리시버 (수신기)</label>
-                    </div>
-                </div>
-            </div>
+<body class="antialiased">
+    <div class="canvas-glow">
+        <div class="glow-a"></div>
+        <div class="glow-b"></div>
+        <div class="glow-c"></div>
+    </div>
 
-            <div class="form-section">
-                <h2>주파수 선택</h2>
-                <div class="radio-group">
-                    <div class="radio-option">
-                        <input type="radio" id="freq400" name="frequency" value="400" onchange="updateFirmwareInfo()">
-                        <label for="freq400">400MHz</label>
-                    </div>
-                    <div class="radio-option">
-                        <input type="radio" id="freq900" name="frequency" value="900" checked onchange="updateFirmwareInfo()">
-                        <label for="freq900">900MHz</label>
-                    </div>
+    <div class="min-h-screen flex flex-col">
+        <header class="pt-16 pb-12">
+            <div class="max-w-4xl mx-auto px-6">
+                <span class="inline-flex items-center gap-2 rounded-full border border-slate-700/70 bg-slate-900/60 px-4 py-1 text-sm uppercase tracking-[0.28em] text-sky-300/90">Firmware Uploader</span>
+                <h1 class="mt-6 text-4xl font-semibold tracking-tight text-white md:text-5xl">ESP32-S3 TALLY NODE 펌웨어 업로드</h1>
+                <p class="mt-4 text-base text-slate-300 md:text-lg">브라우저에서 바로 최신 펌웨어를 설치하세요. 장치와 주파수를 선택하면 맞는 매니페스트를 자동으로 적용해 드립니다.</p>
+                <div class="mt-8 flex flex-wrap items-center gap-3 text-sm text-slate-200/85">
+                    <span class="inline-flex items-center gap-2 rounded-full border border-sky-500/40 bg-sky-500/15 px-4 py-2">Chrome · Edge · Opera 권장</span>
+                    <span class="inline-flex items-center gap-2 rounded-full border border-slate-600/60 bg-slate-900/70 px-4 py-2">Web Serial 활성화 필요</span>
                 </div>
             </div>
-            
-            <div class="install-section">
-                <esp-web-install-button manifest="manifest_master_900.json">
-                    <button slot="activate">펌웨어 설치하기</button>
-                    <span slot="unsupported">이 브라우저는 지원되지 않습니다. Chrome을 사용하세요.</span>
-                    <span slot="not-allowed">시리얼 포트 권한이 필요합니다.</span>
-                </esp-web-install-button>
-                
-                <div class="info-box">
-                    <h3>설치 전 준비사항</h3>
-                    <p>• Chrome, Edge, Opera 브라우저 사용</p>
-                    <p>• ESP32-S3를 USB로 연결</p>
-                    <p>• 부트 모드 진입: BOOT 버튼 누른 상태로 RESET 버튼 누르기</p>
+        </header>
+
+        <main class="flex-1 pb-24">
+            <div class="max-w-5xl mx-auto px-6">
+                <div class="grid gap-8 lg:grid-cols-[240px,1fr] lg:gap-12">
+                    <aside class="space-y-5">
+                        <button type="button" class="step-trigger" data-step="1" aria-current="step">
+                            <span class="step-index">01</span>
+                            <div>
+                                <p class="text-base font-semibold text-white">디바이스 선택</p>
+                                <p class="mt-1 text-sm text-slate-300/80">마스터 또는 리시버 장치를 지정하세요.</p>
+                            </div>
+                        </button>
+                        <button type="button" class="step-trigger" data-step="2">
+                            <span class="step-index">02</span>
+                            <div>
+                                <p class="text-base font-semibold text-white">주파수 대역</p>
+                                <p class="mt-1 text-sm text-slate-300/80">사용 중인 무선 대역을 선택합니다.</p>
+                            </div>
+                        </button>
+                        <button type="button" class="step-trigger" data-step="3">
+                            <span class="step-index">03</span>
+                            <div>
+                                <p class="text-base font-semibold text-white">펌웨어 업로드</p>
+                                <p class="mt-1 text-sm text-slate-300/80">선택한 구성으로 설치를 실행합니다.</p>
+                            </div>
+                        </button>
+                    </aside>
+
+                    <section class="">
+                        <div class="step-panel is-visible" data-step="1">
+                            <div class="panel-heading">
+                                <span>step 1</span>
+                                <h2>어떤 디바이스의 펌웨어를 설치할까요?</h2>
+                            </div>
+                            <p class="text-sm text-slate-300/85">ESP32-S3 TALLY NODE는 두 가지 역할로 동작합니다. 업로드할 장치의 역할을 먼저 선택하세요.</p>
+                            <div class="mt-8 grid gap-5 md:grid-cols-2">
+                                <label class="selection-card">
+                                    <input type="radio" name="mode" value="master">
+                                    <div class="card-surface">
+                                        <div class="card-header">
+                                            <h3 class="text-lg font-semibold text-white">마스터</h3>
+                                            <span class="card-badge">송신기</span>
+                                        </div>
+                                        <p class="card-description">카메라 신호를 생성해 리시버로 전달하는 메인 송신기입니다. 스튜디오에서 하나만 운용합니다.</p>
+                                        <span class="card-indicator">선택됨</span>
+                                    </div>
+                                </label>
+                                <label class="selection-card">
+                                    <input type="radio" name="mode" value="receiver">
+                                    <div class="card-surface">
+                                        <div class="card-header">
+                                            <h3 class="text-lg font-semibold text-white">리시버</h3>
+                                            <span class="card-badge">수신기</span>
+                                        </div>
+                                        <p class="card-description">마스터에서 전송된 tally 정보를 받아 카메라 및 모니터에 표시합니다. 카메라 수만큼 준비하세요.</p>
+                                        <span class="card-indicator">선택됨</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="step-panel" data-step="2">
+                            <div class="panel-heading">
+                                <span>step 2</span>
+                                <h2>사용 중인 무선 주파수 대역을 선택하세요</h2>
+                            </div>
+                            <p class="text-sm text-slate-300/85">마스터와 리시버 모두 동일한 주파수 대역을 사용해야 합니다. 900MHz가 기본 구성입니다.</p>
+                            <div class="mt-8 grid gap-5 md:grid-cols-2">
+                                <label class="selection-card">
+                                    <input type="radio" name="frequency" value="900" checked>
+                                    <div class="card-surface">
+                                        <div class="card-header">
+                                            <h3 class="text-lg font-semibold text-white">900MHz</h3>
+                                            <span class="card-badge">기본</span>
+                                        </div>
+                                        <p class="card-description">가장 안정적인 기본 채널입니다. 권장 설정으로 대부분의 환경에서 사용됩니다.</p>
+                                        <span class="card-indicator">선택됨</span>
+                                    </div>
+                                </label>
+                                <label class="selection-card">
+                                    <input type="radio" name="frequency" value="400">
+                                    <div class="card-surface">
+                                        <div class="card-header">
+                                            <h3 class="text-lg font-semibold text-white">400MHz</h3>
+                                            <span class="card-badge">대체</span>
+                                        </div>
+                                        <p class="card-description">특정 지역 규제 또는 간섭 환경에 따라 선택하는 대체 주파수입니다.</p>
+                                        <span class="card-indicator">선택됨</span>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="mt-6 rounded-2xl border border-amber-400/35 bg-amber-500/10 px-6 py-4 text-sm text-amber-100">
+                                <strong class="block text-amber-200">주의</strong>
+                                <span>모든 장치가 동일한 대역을 사용하지 않으면 통신이 이루어지지 않습니다.</span>
+                            </div>
+                        </div>
+
+                        <div class="step-panel" data-step="3">
+                            <div class="panel-heading">
+                                <span>step 3</span>
+                                <h2>선택한 구성으로 펌웨어를 업로드합니다</h2>
+                            </div>
+                            <p class="text-sm text-slate-300/85">장치를 USB로 연결하고 BOOT 버튼을 누른 상태에서 RESET 버튼을 눌러 부트 모드로 진입하세요. 브라우저에서 포트를 선택하면 업로드가 시작됩니다.</p>
+
+                            <div class="mt-8 rounded-2xl border border-slate-700/60 bg-slate-900/70 p-6" id="selection-summary">
+                                <span class="text-xs uppercase tracking-[0.32em] text-slate-400">현재 구성</span>
+                                <p class="mt-3 text-lg font-semibold text-white" id="summary-title">선택 대기 중</p>
+                                <p class="mt-1 text-sm text-slate-300/80" id="summary-caption">장치와 주파수를 모두 선택하면 요약이 표시됩니다.</p>
+                                <div class="mt-4 flex flex-wrap gap-3">
+                                    <button type="button" class="quick-nav-btn" data-step-target="1">디바이스 다시 선택</button>
+                                    <button type="button" class="quick-nav-btn" data-step-target="2">주파수 다시 선택</button>
+                                </div>
+                            </div>
+
+                            <div class="mt-8">
+                                <esp-web-install-button id="web-installer" class="block w-full">
+                                    <button id="install-launch" slot="activate" class="install-button" disabled>구성을 완료하면 업로드할 수 있습니다</button>
+                                    <span slot="unsupported" class="support-note">이 브라우저는 Web Serial을 지원하지 않습니다. Chrome 기반 브라우저를 이용하세요.</span>
+                                    <span slot="not-allowed" class="support-note">시리얼 포트 사용 권한을 허용해 주세요.</span>
+                                </esp-web-install-button>
+                            </div>
+
+                            <p class="support-note">설치 진행 중에는 케이블을 분리하지 말고, 완료 메시지가 표시될 때까지 기다려 주세요.</p>
+                        </div>
+                    </section>
                 </div>
+
+                <section class="mt-16 grid gap-6 lg:grid-cols-2">
+                    <div class="callout">
+                        <h3>업로드 전 준비사항</h3>
+                        <ul>
+                            <li>Chrome, Edge, Opera와 같은 Chromium 기반 브라우저 사용</li>
+                            <li>ESP32-S3를 데이터 전송 가능한 USB-C 케이블로 연결</li>
+                            <li>BOOT 버튼을 누른 상태에서 RESET 버튼을 눌러 부트 모드 진입</li>
+                            <li>방화벽 또는 시리얼 포트 접근 허용 확인</li>
+                        </ul>
+                    </div>
+                    <div class="callout">
+                        <h3>문제가 발생하면</h3>
+                        <ul>
+                            <li>다른 USB 포트 또는 케이블로 재연결합니다.</li>
+                            <li>장치 관리자에서 포트가 인식되는지 확인합니다.</li>
+                            <li>브라우저를 새로고침하고 다시 시도합니다.</li>
+                            <li>장치를 다시 부트 모드로 진입시킨 뒤 업로드합니다.</li>
+                        </ul>
+                    </div>
+                </section>
             </div>
-        </div>
+        </main>
     </div>
 
     <script>
-        // 페이지 로드 후 초기화
-        document.addEventListener('DOMContentLoaded', function() {
-            updateFirmwareInfo(); // 초기 펌웨어 정보 설정
+        let currentStep = 1;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const stepTriggers = document.querySelectorAll('.step-trigger');
+            const modeInputs = document.querySelectorAll('input[name="mode"]');
+            const frequencyInputs = document.querySelectorAll('input[name="frequency"]');
+            const quickNavButtons = document.querySelectorAll('[data-step-target]');
+
+            stepTriggers.forEach(trigger => {
+                trigger.addEventListener('click', () => {
+                    const target = Number(trigger.dataset.step);
+                    goToStep(target);
+                });
+            });
+
+            quickNavButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const target = Number(button.dataset.stepTarget);
+                    goToStep(target);
+                });
+            });
+
+            modeInputs.forEach(input => {
+                input.addEventListener('change', () => handleModeChange());
+                input.addEventListener('click', () => handleModeChange());
+            });
+
+            frequencyInputs.forEach(input => {
+                input.addEventListener('change', () => handleFrequencyChange());
+                input.addEventListener('click', () => handleFrequencyChange());
+            });
+
+            updateInterface();
         });
 
-        // 선택된 펌웨어 정보 업데이트
-        function updateFirmwareInfo() {
-            const selectedMode = document.querySelector('input[name="mode"]:checked').value;
-            const selectedFreq = document.querySelector('input[name="frequency"]:checked').value;
-            console.log('Mode changed to:', selectedMode, 'Frequency:', selectedFreq);
-            
-            // 선택된 모드와 주파수에 따라 manifest 파일 경로 설정
-            updateManifest(selectedMode, selectedFreq);
+        function handleModeChange() {
+            currentStep = Math.max(currentStep, 2);
+            updateInterface();
         }
 
-        // manifest 파일 경로 업데이트
-        function updateManifest(mode, frequency) {
-            const manifestPath = `manifest_${mode}_${frequency}.json`;
-            
-            // esp-web-install-button의 manifest 속성 업데이트
-            const installButton = document.querySelector('esp-web-install-button');
-            if (installButton) {
-                installButton.setAttribute('manifest', manifestPath);
-                console.log('Updated manifest to:', manifestPath);
+        function handleFrequencyChange() {
+            currentStep = 3;
+            updateInterface();
+        }
+
+        function goToStep(targetStep) {
+            const maxStep = getMaxUnlockedStep();
+            if (targetStep < 1 || targetStep > maxStep) return;
+            currentStep = targetStep;
+            updateInterface();
+        }
+
+        function getSelections() {
+            const mode = document.querySelector('input[name="mode"]:checked');
+            const frequency = document.querySelector('input[name="frequency"]:checked');
+            return { mode, frequency };
+        }
+
+        function getMaxUnlockedStep() {
+            const { mode, frequency } = getSelections();
+            if (mode && frequency) return 3;
+            if (mode) return 2;
+            return 1;
+        }
+
+        function updateInterface() {
+            refreshStepper();
+            refreshPanels();
+            refreshSummary();
+            refreshInstaller();
+            refreshQuickNav();
+        }
+
+        function refreshStepper() {
+            const maxStep = getMaxUnlockedStep();
+            document.querySelectorAll('.step-trigger').forEach(trigger => {
+                const step = Number(trigger.dataset.step);
+                let state = 'idle';
+                if (step === currentStep) state = 'active';
+                else if (step < currentStep) state = 'complete';
+                else if (step > maxStep) state = 'locked';
+
+                trigger.dataset.state = state;
+                trigger.setAttribute('aria-current', state === 'active' ? 'step' : 'false');
+                trigger.setAttribute('aria-disabled', state === 'locked' ? 'true' : 'false');
+                trigger.disabled = state === 'locked';
+            });
+        }
+
+        function refreshPanels() {
+            document.querySelectorAll('.step-panel').forEach(panel => {
+                const step = Number(panel.dataset.step);
+                if (step === currentStep) panel.classList.add('is-visible');
+                else panel.classList.remove('is-visible');
+            });
+        }
+
+        function refreshSummary() {
+            const { mode, frequency } = getSelections();
+            const title = document.getElementById('summary-title');
+            const caption = document.getElementById('summary-caption');
+            if (!title || !caption) return;
+
+            if (mode && frequency) {
+                const modeLabel = mode.value === 'master' ? '마스터 (송신기)' : '리시버 (수신기)';
+                const freqLabel = frequency.value === '900' ? '900MHz' : '400MHz';
+                title.textContent = `${modeLabel} · ${freqLabel}`;
+                caption.textContent = '이 구성을 기준으로 펌웨어가 업로드됩니다.';
+            } else if (mode) {
+                title.textContent = mode.value === 'master' ? '마스터 (송신기)' : '리시버 (수신기)';
+                caption.textContent = '주파수 대역을 선택하면 설치를 진행할 수 있습니다.';
+            } else {
+                title.textContent = '선택 대기 중';
+                caption.textContent = '장치 유형과 주파수를 순서대로 선택해 주세요.';
             }
         }
+
+        function refreshInstaller() {
+            const { mode, frequency } = getSelections();
+            const installer = document.getElementById('web-installer');
+            const launchButton = document.getElementById('install-launch');
+            if (!installer || !launchButton) return;
+
+            if (mode && frequency) {
+                const manifest = `manifest_${mode.value}_${frequency.value}.json`;
+                installer.setAttribute('manifest', manifest);
+                launchButton.removeAttribute('disabled');
+                launchButton.textContent = '펌웨어 업로드 시작';
+            } else {
+                installer.removeAttribute('manifest');
+                launchButton.setAttribute('disabled', '');
+                launchButton.textContent = '구성을 완료하면 업로드할 수 있습니다';
+            }
+        }
+
+        function refreshQuickNav() {
+            const maxStep = getMaxUnlockedStep();
+            document.querySelectorAll('[data-step-target]').forEach(button => {
+                const step = Number(button.dataset.stepTarget);
+                if (step > maxStep) {
+                    button.setAttribute('disabled', '');
+                } else {
+                    button.removeAttribute('disabled');
+                }
+            });
+        }
+
+        window.addEventListener('load', () => {
+            const installer = document.getElementById('web-installer');
+            if (!installer) return;
+            installer.addEventListener('state-changed', event => console.log('설치 상태 변경:', event.detail));
+            installer.addEventListener('error', event => console.error('설치 오류:', event.detail));
+        });
     </script>
 </body>
 </html>
