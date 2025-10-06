@@ -14,7 +14,7 @@
 - 슬라이서 프로그램에서 오브젝트 분리 후 출력 진행
 
 
-<img src="/web/images/3d/TALLY-NODE-base.png" width="450px" height="300px" alt="TALLY-NODE-base"></img><br/>
+<img src="./images/3d/TALLY-NODE-base.png" width="450px" height="300px" alt="TALLY-NODE-base"></img><br/>
 
 <img src="/web/images/3d/TALLY-NODE-wave.png" width="450px" height="300px" alt="TALLY-NODE-wave"></img><br/>
 
