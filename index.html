@@ -328,6 +328,37 @@
                 padding: 1.6rem;
             }
         }
+        #language-switcher {
+            position: fixed;
+            bottom: 1.5rem;
+            left: 1.5rem;
+            z-index: 50;
+            border-radius: 99px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(71, 85, 105, 0.5);
+            padding: 0.35rem;
+            display: flex;
+            gap: 0.35rem;
+            backdrop-filter: blur(8px);
+        }
+        #language-switcher button {
+            border-radius: 99px;
+            border: none;
+            background: transparent;
+            color: #94a3b8;
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 0.5rem 0.9rem;
+            cursor: pointer;
+            transition: color 150ms ease, background-color 150ms ease;
+        }
+        #language-switcher button:hover {
+            color: #e2e8f0;
+        }
+        #language-switcher button.active-lang {
+            color: #082f49;
+            background-color: #38bdf8;
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -340,12 +371,19 @@
     <div class="min-h-screen flex flex-col">
         <header class="pt-16 pb-12">
             <div class="max-w-4xl mx-auto px-6">
-                <span class="inline-flex items-center gap-2 rounded-full border border-slate-700/70 bg-slate-900/60 px-4 py-1 text-sm uppercase tracking-[0.28em] text-sky-300/90">Firmware Uploader</span>
-                <h1 class="mt-6 text-4xl font-semibold tracking-tight text-white md:text-5xl">ESP32-S3 TALLY NODE 펌웨어 업로드</h1>
-                <p class="mt-4 text-base text-slate-300 md:text-lg">브라우저에서 바로 최신 펌웨어를 설치하세요. 장치와 주파수를 선택하면 맞는 매니페스트를 자동으로 적용해 드립니다.</p>
+                <span class="inline-flex items-center gap-2 rounded-full border border-slate-700/70 bg-slate-900/60 px-4 py-1 text-sm uppercase tracking-[0.28em] text-sky-300/90" data-translate-key="headerCategory">Firmware Uploader</span>
+                <h1 class="mt-6 text-4xl font-semibold tracking-tight text-white md:text-5xl" data-translate-key="headerTitle">ESP32-S3 TALLY NODE 펌웨어 업로드</h1>
+                <p class="mt-4 text-base text-slate-300 md:text-lg" data-translate-key="headerSubtitle">브라우저에서 바로 최신 펌웨어를 설치하세요. 장치와 주파수를 선택하면 맞는 매니페스트를 자동으로 적용해 드립니다.</p>
                 <div class="mt-8 flex flex-wrap items-center gap-3 text-sm text-slate-200/85">
-                    <span class="inline-flex items-center gap-2 rounded-full border border-sky-500/40 bg-sky-500/15 px-4 py-2">Chrome · Edge · Opera 권장</span>
-                    <span class="inline-flex items-center gap-2 rounded-full border border-slate-600/60 bg-slate-900/70 px-4 py-2">Web Serial 활성화 필요</span>
+                    <span class="inline-flex items-center gap-2 rounded-full border border-sky-500/40 bg-sky-500/15 px-4 py-2" data-translate-key="badgeRecommended">Chrome · Edge · Opera 권장</span>
+                    <span class="inline-flex items-center gap-2 rounded-full border border-slate-600/60 bg-slate-900/70 px-4 py-2" data-translate-key="badgeWebSerial">Web Serial 활성화 필요</span>
+                    <a href="https://github.com/pro-live-video/tally-node" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 rounded-full border border-slate-600/60 bg-slate-900/70 px-4 py-2 transition-colors hover:border-sky-500/40 hover:bg-sky-500/15">
+                        <span data-translate-key="linkUserManual">사용자 설명서 보기</span>
+                        <svg xmlns="http://www.w.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
+                            <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
+                        </svg>
+                    </a>
                 </div>
             </div>
         </header>
@@ -357,22 +395,22 @@
                         <button type="button" class="step-trigger" data-step="1" aria-current="step">
                             <span class="step-index">01</span>
                             <div>
-                                <p class="text-base font-semibold text-white">디바이스 선택</p>
-                                <p class="mt-1 text-sm text-slate-300/80">마스터 또는 리시버 장치를 지정하세요.</p>
+                                <p class="text-base font-semibold text-white" data-translate-key="step1Title">디바이스 선택</p>
+                                <p class="mt-1 text-sm text-slate-300/80" data-translate-key="step1Desc">마스터 또는 리시버 장치를 지정하세요.</p>
                             </div>
                         </button>
                         <button type="button" class="step-trigger" data-step="2">
                             <span class="step-index">02</span>
                             <div>
-                                <p class="text-base font-semibold text-white">주파수 대역</p>
-                                <p class="mt-1 text-sm text-slate-300/80">사용 중인 무선 대역을 선택합니다.</p>
+                                <p class="text-base font-semibold text-white" data-translate-key="step2Title">주파수 대역</p>
+                                <p class="mt-1 text-sm text-slate-300/80" data-translate-key="step2Desc">사용 중인 무선 대역을 선택합니다.</p>
                             </div>
                         </button>
                         <button type="button" class="step-trigger" data-step="3">
                             <span class="step-index">03</span>
                             <div>
-                                <p class="text-base font-semibold text-white">펌웨어 업로드</p>
-                                <p class="mt-1 text-sm text-slate-300/80">선택한 구성으로 설치를 실행합니다.</p>
+                                <p class="text-base font-semibold text-white" data-translate-key="step3Title">펌웨어 업로드</p>
+                                <p class="mt-1 text-sm text-slate-300/80" data-translate-key="step3Desc">선택한 구성으로 설치를 실행합니다.</p>
                             </div>
                         </button>
                     </aside>
@@ -381,30 +419,30 @@
                         <div class="step-panel is-visible" data-step="1">
                             <div class="panel-heading">
                                 <span>step 1</span>
-                                <h2>어떤 디바이스의 펌웨어를 설치할까요?</h2>
+                                <h2 data-translate-key="panel1Heading">어떤 디바이스의 펌웨어를 설치할까요?</h2>
                             </div>
-                            <p class="text-sm text-slate-300/85">ESP32-S3 TALLY NODE는 두 가지 역할로 동작합니다. 업로드할 장치의 역할을 먼저 선택하세요.</p>
+                            <p class="text-sm text-slate-300/85" data-translate-key="panel1Subheading">ESP32-S3 TALLY NODE는 두 가지 역할로 동작합니다. 업로드할 장치의 역할을 먼저 선택하세요.</p>
                             <div class="mt-8 grid gap-5 md:grid-cols-2">
                                 <label class="selection-card">
                                     <input type="radio" name="mode" value="master">
                                     <div class="card-surface">
                                         <div class="card-header">
-                                            <h3 class="text-lg font-semibold text-white">마스터</h3>
-                                            <span class="card-badge">송신기</span>
+                                            <h3 class="text-lg font-semibold text-white" data-translate-key="masterTitle">마스터</h3>
+                                            <span class="card-badge" data-translate-key="masterBadge">송신기</span>
                                         </div>
-                                        <p class="card-description">카메라 신호를 생성해 리시버로 전달하는 메인 송신기입니다. 스튜디오에서 하나만 운용합니다.</p>
-                                        <span class="card-indicator">선택됨</span>
+                                        <p class="card-description" data-translate-key="masterDesc">카메라 신호를 생성해 리시버로 전달하는 메인 송신기입니다. 스튜디오에서 하나만 운용합니다.</p>
+                                        <span class="card-indicator" data-translate-key="selected">선택됨</span>
                                     </div>
                                 </label>
                                 <label class="selection-card">
                                     <input type="radio" name="mode" value="receiver">
                                     <div class="card-surface">
                                         <div class="card-header">
-                                            <h3 class="text-lg font-semibold text-white">리시버</h3>
-                                            <span class="card-badge">수신기</span>
+                                            <h3 class="text-lg font-semibold text-white" data-translate-key="receiverTitle">리시버</h3>
+                                            <span class="card-badge" data-translate-key="receiverBadge">수신기</span>
                                         </div>
-                                        <p class="card-description">마스터에서 전송된 tally 정보를 받아 카메라 및 모니터에 표시합니다. 카메라 수만큼 준비하세요.</p>
-                                        <span class="card-indicator">선택됨</span>
+                                        <p class="card-description" data-translate-key="receiverDesc">마스터에서 전송된 tally 정보를 받아 카메라 및 모니터에 표시합니다. 카메라 수만큼 준비하세요.</p>
+                                        <span class="card-indicator" data-translate-key="selected">선택됨</span>
                                     </div>
                                 </label>
                             </div>
@@ -413,86 +451,86 @@
                         <div class="step-panel" data-step="2">
                             <div class="panel-heading">
                                 <span>step 2</span>
-                                <h2>사용 중인 무선 주파수 대역을 선택하세요</h2>
+                                <h2 data-translate-key="panel2Heading">사용 중인 무선 주파수 대역을 선택하세요</h2>
                             </div>
-                            <p class="text-sm text-slate-300/85">마스터와 리시버 모두 동일한 주파수 대역을 사용해야 합니다. 900MHz가 기본 구성입니다.</p>
+                            <p class="text-sm text-slate-300/85" data-translate-key="panel2Subheading">마스터와 리시버 모두 동일한 주파수 대역을 사용해야 합니다. 900MHz가 기본 구성입니다.</p>
                             <div class="mt-8 grid gap-5 md:grid-cols-2">
                                 <label class="selection-card">
                                     <input type="radio" name="frequency" value="900" checked>
                                     <div class="card-surface">
                                         <div class="card-header">
-                                            <h3 class="text-lg font-semibold text-white">900MHz</h3>
-                                            <span class="card-badge">기본</span>
+                                            <h3 class="text-lg font-semibold text-white" data-translate-key="freq900Title">900MHz</h3>
+                                            <span class="card-badge" data-translate-key="freq900Badge">기본</span>
                                         </div>
-                                        <p class="card-description">가장 안정적인 기본 채널입니다. 권장 설정으로 대부분의 환경에서 사용됩니다.</p>
-                                        <span class="card-indicator">선택됨</span>
+                                        <p class="card-description" data-translate-key="freq900Desc">가장 안정적인 기본 채널입니다. 권장 설정으로 대부분의 환경에서 사용됩니다.</p>
+                                        <span class="card-indicator" data-translate-key="selected">선택됨</span>
                                     </div>
                                 </label>
                                 <label class="selection-card">
                                     <input type="radio" name="frequency" value="400">
                                     <div class="card-surface">
                                         <div class="card-header">
-                                            <h3 class="text-lg font-semibold text-white">400MHz</h3>
-                                            <span class="card-badge">대체</span>
+                                            <h3 class="text-lg font-semibold text-white" data-translate-key="freq400Title">400MHz</h3>
+                                            <span class="card-badge" data-translate-key="freq400Badge">대체</span>
                                         </div>
-                                        <p class="card-description">특정 지역 규제 또는 간섭 환경에 따라 선택하는 대체 주파수입니다.</p>
-                                        <span class="card-indicator">선택됨</span>
+                                        <p class="card-description" data-translate-key="freq400Desc">특정 지역 규제 또는 간섭 환경에 따라 선택하는 대체 주파수입니다.</p>
+                                        <span class="card-indicator" data-translate-key="selected">선택됨</span>
                                     </div>
                                 </label>
                             </div>
                             <div class="mt-6 rounded-2xl border border-amber-400/35 bg-amber-500/10 px-6 py-4 text-sm text-amber-100">
-                                <strong class="block text-amber-200">주의</strong>
-                                <span>모든 장치가 동일한 대역을 사용하지 않으면 통신이 이루어지지 않습니다.</span>
+                                <strong class="block text-amber-200" data-translate-key="freqWarningTitle">주의</strong>
+                                <span data-translate-key="freqWarningDesc">모든 장치가 동일한 대역을 사용하지 않으면 통신이 이루어지지 않습니다.</span>
                             </div>
                         </div>
 
                         <div class="step-panel" data-step="3">
                             <div class="panel-heading">
                                 <span>step 3</span>
-                                <h2>선택한 구성으로 펌웨어를 업로드합니다</h2>
+                                <h2 data-translate-key="panel3Heading">선택한 구성으로 펌웨어를 업로드합니다</h2>
                             </div>
-                            <p class="text-sm text-slate-300/85">장치를 USB로 연결하고 BOOT 버튼을 누른 상태에서 RESET 버튼을 눌러 부트 모드로 진입하세요. 브라우저에서 포트를 선택하면 업로드가 시작됩니다.</p>
+                            <p class="text-sm text-slate-300/85" data-translate-key="panel3Subheading">장치를 USB로 연결하고 BOOT 버튼을 누른 상태에서 RESET 버튼을 눌러 부트 모드로 진입하세요. 브라우저에서 포트를 선택하면 업로드가 시작됩니다.</p>
 
                             <div class="mt-8 rounded-2xl border border-slate-700/60 bg-slate-900/70 p-6" id="selection-summary">
-                                <span class="text-xs uppercase tracking-[0.32em] text-slate-400">현재 구성</span>
-                                <p class="mt-3 text-lg font-semibold text-white" id="summary-title">선택 대기 중</p>
-                                <p class="mt-1 text-sm text-slate-300/80" id="summary-caption">장치와 주파수를 모두 선택하면 요약이 표시됩니다.</p>
+                                <span class="text-xs uppercase tracking-[0.32em] text-slate-400" data-translate-key="summaryLabel">현재 구성</span>
+                                <p class="mt-3 text-lg font-semibold text-white" id="summary-title" data-translate-key="summaryTitleDefault">선택 대기 중</p>
+                                <p class="mt-1 text-sm text-slate-300/80" id="summary-caption" data-translate-key="summaryCaptionDefault">장치와 주파수를 모두 선택하면 요약이 표시됩니다.</p>
                                 <div class="mt-4 flex flex-wrap gap-3">
-                                    <button type="button" class="quick-nav-btn" data-step-target="1">디바이스 다시 선택</button>
-                                    <button type="button" class="quick-nav-btn" data-step-target="2">주파수 다시 선택</button>
+                                    <button type="button" class="quick-nav-btn" data-step-target="1" data-translate-key="btnReselectDevice">디바이스 다시 선택</button>
+                                    <button type="button" class="quick-nav-btn" data-step-target="2" data-translate-key="btnReselectFreq">주파수 다시 선택</button>
                                 </div>
                             </div>
 
                             <div class="mt-8">
                                 <esp-web-install-button id="web-installer" class="block w-full">
-                                    <button id="install-launch" slot="activate" class="install-button" disabled>구성을 완료하면 업로드할 수 있습니다</button>
-                                    <span slot="unsupported" class="support-note">이 브라우저는 Web Serial을 지원하지 않습니다. Chrome 기반 브라우저를 이용하세요.</span>
-                                    <span slot="not-allowed" class="support-note">시리얼 포트 사용 권한을 허용해 주세요.</span>
+                                    <button id="install-launch" slot="activate" class="install-button" disabled data-translate-key="btnInstallDefault">구성을 완료하면 업로드할 수 있습니다</button>
+                                    <span slot="unsupported" class="support-note" data-translate-key="unsupportedBrowser">이 브라우저는 Web Serial을 지원하지 않습니다. Chrome 기반 브라우저를 이용하세요.</span>
+                                    <span slot="not-allowed" class="support-note" data-translate-key="notAllowed">시리얼 포트 사용 권한을 허용해 주세요.</span>
                                 </esp-web-install-button>
                             </div>
 
-                            <p class="support-note">설치 진행 중에는 케이블을 분리하지 말고, 완료 메시지가 표시될 때까지 기다려 주세요.</p>
+                            <p class="support-note" data-translate-key="installWarning">설치 진행 중에는 케이블을 분리하지 말고, 완료 메시지가 표시될 때까지 기다려 주세요.</p>
                         </div>
                     </section>
                 </div>
 
                 <section class="mt-16 grid gap-6 lg:grid-cols-2">
                     <div class="callout">
-                        <h3>업로드 전 준비사항</h3>
+                        <h3 data-translate-key="prepTitle">업로드 전 준비사항</h3>
                         <ul>
-                            <li>Chrome, Edge, Opera와 같은 Chromium 기반 브라우저 사용</li>
-                            <li>ESP32-S3를 데이터 전송 가능한 USB-C 케이블로 연결</li>
-                            <li>BOOT 버튼을 누른 상태에서 RESET 버튼을 눌러 부트 모드 진입</li>
-                            <li>방화벽 또는 시리얼 포트 접근 허용 확인</li>
+                            <li data-translate-key="prep1">Chrome, Edge, Opera와 같은 Chromium 기반 브라우저 사용</li>
+                            <li data-translate-key="prep2">ESP32-S3를 데이터 전송 가능한 USB-C 케이블로 연결</li>
+                            <li data-translate-key="prep3">BOOT 버튼을 누른 상태에서 RESET 버튼을 눌러 부트 모드 진입</li>
+                            <li data-translate-key="prep4">방화벽 또는 시리얼 포트 접근 허용 확인</li>
                         </ul>
                     </div>
                     <div class="callout">
-                        <h3>문제가 발생하면</h3>
+                        <h3 data-translate-key="troubleTitle">문제가 발생하면</h3>
                         <ul>
-                            <li>다른 USB 포트 또는 케이블로 재연결합니다.</li>
-                            <li>장치 관리자에서 포트가 인식되는지 확인합니다.</li>
-                            <li>브라우저를 새로고침하고 다시 시도합니다.</li>
-                            <li>장치를 다시 부트 모드로 진입시킨 뒤 업로드합니다.</li>
+                            <li data-translate-key="trouble1">다른 USB 포트 또는 케이블로 재연결합니다.</li>
+                            <li data-translate-key="trouble2">장치 관리자에서 포트가 인식되는지 확인합니다.</li>
+                            <li data-translate-key="trouble3">브라우저를 새로고침하고 다시 시도합니다.</li>
+                            <li data-translate-key="trouble4">장치를 다시 부트 모드로 진입시킨 뒤 업로드합니다.</li>
                         </ul>
                     </div>
                 </section>
@@ -500,6 +538,13 @@
         </main>
     </div>
 
+    <div id="language-switcher">
+        <button type="button" data-lang="en">EN</button>
+        <button type="button" data-lang="ko">KO</button>
+    </div>
+
+    <script src="translations.js"></script>
+    <script src="i18n.js"></script>
     <script>
         let currentStep = 1;
 
@@ -533,7 +578,7 @@
                 input.addEventListener('click', () => handleFrequencyChange());
             });
 
-            updateInterface();
+            // updateInterface is now called from i18n.js after initial translation
         });
 
         function handleModeChange() {
@@ -572,7 +617,12 @@
             refreshSummary();
             refreshInstaller();
             refreshQuickNav();
+            // Re-apply translations to ensure dynamic content is updated
+            if (window.applyTranslations) {
+                window.applyTranslations();
+            }
         }
+        window.updateInterface = updateInterface;
 
         function refreshStepper() {
             const maxStep = getMaxUnlockedStep();
@@ -605,16 +655,16 @@
             if (!title || !caption) return;
 
             if (mode && frequency) {
-                const modeLabel = mode.value === 'master' ? '마스터 (송신기)' : '리시버 (수신기)';
+                const modeLabel = translate(mode.value === 'master' ? 'masterLabel' : 'receiverLabel');
                 const freqLabel = frequency.value === '900' ? '900MHz' : '400MHz';
-                title.textContent = `${modeLabel} · ${freqLabel}`;
-                caption.textContent = '이 구성을 기준으로 펌웨어가 업로드됩니다.';
+                title.textContent = translate('summaryTitleTpl').replace('{modeLabel}', modeLabel).replace('{freqLabel}', freqLabel);
+                caption.textContent = translate('summaryCaptionReady');
             } else if (mode) {
-                title.textContent = mode.value === 'master' ? '마스터 (송신기)' : '리시버 (수신기)';
-                caption.textContent = '주파수 대역을 선택하면 설치를 진행할 수 있습니다.';
+                title.textContent = translate(mode.value === 'master' ? 'masterLabel' : 'receiverLabel');
+                caption.textContent = translate('summaryCaptionNeedFreq');
             } else {
-                title.textContent = '선택 대기 중';
-                caption.textContent = '장치 유형과 주파수를 순서대로 선택해 주세요.';
+                title.textContent = translate('summaryTitleDefault');
+                caption.textContent = translate('summaryCaptionDefaultJs');
             }
         }
 
@@ -628,11 +678,11 @@
                 const manifest = `manifest_${mode.value}_${frequency.value}.json`;
                 installer.setAttribute('manifest', manifest);
                 launchButton.removeAttribute('disabled');
-                launchButton.textContent = '펌웨어 업로드 시작';
+                launchButton.textContent = translate('btnInstallReady');
             } else {
                 installer.removeAttribute('manifest');
                 launchButton.setAttribute('disabled', '');
-                launchButton.textContent = '구성을 완료하면 업로드할 수 있습니다';
+                launchButton.textContent = translate('btnInstallDefault');
             }
         }
 
@@ -651,8 +701,8 @@
         window.addEventListener('load', () => {
             const installer = document.getElementById('web-installer');
             if (!installer) return;
-            installer.addEventListener('state-changed', event => console.log('설치 상태 변경:', event.detail));
-            installer.addEventListener('error', event => console.error('설치 오류:', event.detail));
+            installer.addEventListener('state-changed', event => console.log('Installation state changed:', event.detail));
+            installer.addEventListener('error', event => console.error('Installation error:', event.detail));
         });
     </script>
 </body>
