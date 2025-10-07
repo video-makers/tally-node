@@ -1,20 +1,20 @@
 
 const translations = {
   "pageTitle": {
-    "ko": "ESP32-S3 TALLY NODE | 펌웨어 업로드",
-    "en": "ESP32-S3 TALLY NODE | Firmware Upload"
+    "ko": "TALLY NODE | 펌웨어 업로드",
+    "en": "TALLY NODE | Firmware Upload"
   },
   "pageDescription": {
-    "ko": "브라우저에서 ESP32-S3 TALLY NODE 펌웨어를 바로 업로드하세요.",
-    "en": "Upload firmware to your ESP32-S3 TALLY NODE directly from your browser."
+    "ko": "브라우저에서 TALLY NODE 펌웨어를 바로 업로드하세요.",
+    "en": "Upload firmware to your TALLY NODE directly from your browser."
   },
   "headerCategory": {
     "ko": "Firmware Uploader",
     "en": "Firmware Uploader"
   },
   "headerTitle": {
-    "ko": "ESP32-S3 TALLY NODE 펌웨어 업로드",
-    "en": "ESP32-S3 TALLY NODE Firmware Upload"
+    "ko": "TALLY NODE 펌웨어 업로드",
+    "en": "TALLY NODE Firmware Upload"
   },
   "headerSubtitle": {
     "ko": "브라우저에서 바로 최신 펌웨어를 설치하세요. 장치와 주파수를 선택하면 맞는 매니페스트를 자동으로 적용해 드립니다.",
@@ -61,8 +61,8 @@ const translations = {
     "en": "Which device's firmware will you install?"
   },
   "panel1Subheading": {
-    "ko": "ESP32-S3 TALLY NODE는 두 가지 역할로 동작합니다. 업로드할 장치의 역할을 먼저 선택하세요.",
-    "en": "The ESP32-S3 TALLY NODE operates in two roles. Please select the role of the device to upload to."
+    "ko": "TALLY NODE는 두 가지 역할로 동작합니다. 업로드할 장치의 역할을 먼저 선택하세요.",
+    "en": "The TALLY NODE operates in two roles. Please select the role of the device to upload to."
   },
   "masterTitle": {
     "ko": "마스터",
