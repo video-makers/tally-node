@@ -607,7 +607,7 @@
             }
         }
 
-        function refreshInstaller() {
+        async function refreshInstaller() {
             const { mode } = getSelections();
             const installer = document.getElementById('web-installer');
             const launchButton = document.getElementById('install-launch');
@@ -618,6 +618,20 @@
                 installer.setAttribute('manifest', manifest);
                 launchButton.removeAttribute('disabled');
                 launchButton.textContent = translate('btnInstallReady');
+
+                // 매니페스트에서 빌드 날짜 가져오기
+                try {
+                    const response = await fetch(manifest);
+                    const data = await response.json();
+                    if (data.buildDate) {
+                        const caption = document.getElementById('summary-caption');
+                        if (caption) {
+                            caption.textContent = translate('summaryCaptionReady') + ` (빌드: ${data.buildDate})`;
+                        }
+                    }
+                } catch (error) {
+                    console.warn('매니페스트 파일을 읽을 수 없습니다:', error);
+                }
             } else {
                 installer.removeAttribute('manifest');
                 launchButton.setAttribute('disabled', '');
