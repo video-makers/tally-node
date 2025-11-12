@@ -1,0 +1,15 @@
+{
+    "name": "TALLY NODE Receiver",
+    "version": "1.0.0",
+    "new_install_prompt_erase": true,
+    "builds": [
+        {
+            "chipFamily": "ESP32-S3",
+            "parts": [
+                { "path": "data/receiver/bootloader.bin", "offset": 0 },
+                { "path": "data/receiver/partitions.bin", "offset": 32768 },
+                { "path": "data/receiver/firmware.bin", "offset": 65536 }
+            ]
+        }
+    ]
+}
