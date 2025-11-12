@@ -255,5 +255,17 @@ const translations = {
   "footerCopyright": {
     "ko": "© 2025 TALLY NODE. All rights reserved.",
     "en": "© 2025 TALLY NODE. All rights reserved."
+  },
+  "recentChanges": {
+    "ko": "최근 변경 이력",
+    "en": "Recent Changes"
+  },
+  "viewFullChangelog": {
+    "ko": "전체 보기 →",
+    "en": "View All →"
+  },
+  "loadingChangelog": {
+    "ko": "변경 이력을 불러오는 중...",
+    "en": "Loading changelog..."
   }
 };

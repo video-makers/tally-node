@@ -494,12 +494,26 @@
         </main>
 
         <footer class="mt-16 border-t border-slate-700/50 py-8">
-            <div class="max-w-4xl mx-auto px-6 text-center">
-                <div class="flex flex-wrap justify-center gap-6 text-sm text-slate-400">
-                    <a href="docs/CHANGELOG.md" target="_blank" class="hover:text-sky-400 transition-colors" data-translate-key="linkChangelog">변경 이력</a>
-                    <a href="https://github.com/pro-live-video/tally-node" target="_blank" rel="noopener noreferrer" class="hover:text-sky-400 transition-colors" data-translate-key="linkGithub">GitHub</a>
+            <div class="max-w-4xl mx-auto px-6">
+                <!-- 최근 변경 이력 -->
+                <div id="recent-changelog" class="mb-8 rounded-2xl border border-slate-700/60 bg-slate-900/70 p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-white" data-translate-key="recentChanges">최근 변경 이력</h3>
+                        <a href="docs/CHANGELOG.md" target="_blank" class="text-sm text-sky-400 hover:text-sky-300 transition-colors" data-translate-key="viewFullChangelog">전체 보기 →</a>
+                    </div>
+                    <div id="changelog-content" class="text-sm text-slate-300 space-y-2">
+                        <p class="text-slate-500" data-translate-key="loadingChangelog">변경 이력을 불러오는 중...</p>
+                    </div>
                 </div>
-                <p class="mt-4 text-xs text-slate-500" data-translate-key="footerCopyright">© 2025 TALLY NODE. All rights reserved.</p>
+
+                <!-- 링크 -->
+                <div class="text-center">
+                    <div class="flex flex-wrap justify-center gap-6 text-sm text-slate-400">
+                        <a href="docs/CHANGELOG.md" target="_blank" class="hover:text-sky-400 transition-colors" data-translate-key="linkChangelog">변경 이력</a>
+                        <a href="https://github.com/pro-live-video/tally-node" target="_blank" rel="noopener noreferrer" class="hover:text-sky-400 transition-colors" data-translate-key="linkGithub">GitHub</a>
+                    </div>
+                    <p class="mt-4 text-xs text-slate-500" data-translate-key="footerCopyright">© 2025 TALLY NODE. All rights reserved.</p>
+                </div>
             </div>
         </footer>
     </div>
@@ -675,6 +689,64 @@
             if (!installer) return;
             installer.addEventListener('state-changed', event => console.log('Installation state changed:', event.detail));
             installer.addEventListener('error', event => console.error('Installation error:', event.detail));
+        });
+
+        // CHANGELOG 로드 및 표시
+        async function loadChangelog() {
+            try {
+                const response = await fetch('docs/CHANGELOG.md');
+                const text = await response.text();
+
+                // 첫 번째 버전의 내용만 파싱 (## 로 시작하는 첫 번째 섹션)
+                const lines = text.split('\n');
+                let inFirstVersion = false;
+                let firstVersionContent = [];
+                let versionTitle = '';
+
+                for (let i = 0; i < lines.length; i++) {
+                    const line = lines[i];
+
+                    if (line.startsWith('## v')) {
+                        if (!inFirstVersion) {
+                            inFirstVersion = true;
+                            versionTitle = line.replace('## ', '');
+                        } else {
+                            break; // 두 번째 버전 시작하면 중단
+                        }
+                    } else if (inFirstVersion) {
+                        if (line.startsWith('###')) {
+                            firstVersionContent.push(`<strong class="text-sky-400">${line.replace('### ', '')}</strong>`);
+                        } else if (line.startsWith('- ')) {
+                            firstVersionContent.push(`<span class="text-slate-300">• ${line.substring(2)}</span>`);
+                        } else if (line.trim() === '' || line.startsWith('---')) {
+                            // 빈 줄이나 구분선은 무시
+                        }
+                    }
+                }
+
+                const contentDiv = document.getElementById('changelog-content');
+                if (contentDiv && firstVersionContent.length > 0) {
+                    contentDiv.innerHTML = `
+                        <div class="mb-3">
+                            <span class="text-sky-300 font-semibold">${versionTitle}</span>
+                        </div>
+                        <div class="space-y-1">
+                            ${firstVersionContent.join('<br>')}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.warn('CHANGELOG를 불러올 수 없습니다:', error);
+                const contentDiv = document.getElementById('changelog-content');
+                if (contentDiv) {
+                    contentDiv.innerHTML = '<p class="text-slate-500">변경 이력을 불러올 수 없습니다.</p>';
+                }
+            }
+        }
+
+        // 페이지 로드 시 CHANGELOG 로드
+        document.addEventListener('DOMContentLoaded', () => {
+            loadChangelog();
         });
     </script>
 </body>
