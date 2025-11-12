@@ -619,15 +619,24 @@
                 launchButton.removeAttribute('disabled');
                 launchButton.textContent = translate('btnInstallReady');
 
-                // 매니페스트에서 빌드 날짜 가져오기
+                // 매니페스트에서 버전 및 빌드 날짜 가져오기
                 try {
                     const response = await fetch(manifest);
                     const data = await response.json();
-                    if (data.buildDate) {
-                        const caption = document.getElementById('summary-caption');
-                        if (caption) {
-                            caption.textContent = translate('summaryCaptionReady') + ` (빌드: ${data.buildDate})`;
+                    const caption = document.getElementById('summary-caption');
+                    if (caption) {
+                        let captionText = translate('summaryCaptionReady');
+                        if (data.version || data.buildDate) {
+                            const versionInfo = [];
+                            if (data.version) {
+                                // 이미 v가 붙어있으면 그대로, 없으면 추가
+                                const version = data.version.startsWith('v') ? data.version : `v${data.version}`;
+                                versionInfo.push(version);
+                            }
+                            if (data.buildDate) versionInfo.push(data.buildDate);
+                            captionText += ` (${versionInfo.join(' | ')})`;
                         }
+                        caption.textContent = captionText;
                     }
                 } catch (error) {
                     console.warn('매니페스트 파일을 읽을 수 없습니다:', error);
