@@ -17,8 +17,8 @@ const translations = {
     "en": "TALLY NODE Firmware Upload"
   },
   "headerSubtitle": {
-    "ko": "브라우저에서 바로 최신 펌웨어를 설치하세요. 장치를 선택하면 맞는 매니페스트를 자동으로 적용해 드립니다.",
-    "en": "Install the latest firmware directly from your browser. The correct manifest will be applied automatically when you select the device."
+    "ko": "브라우저에서 바로 최신 펌웨어를 설치하세요. 펌웨어를 선택하면 맞는 매니페스트를 자동으로 적용해 드립니다.",
+    "en": "Install the latest firmware directly from your browser. The correct manifest will be applied automatically when you select the firmware."
   },
   "badgeRecommended": {
     "ko": "Chrome · Edge · Opera 권장",
@@ -33,12 +33,12 @@ const translations = {
     "en": "View User Manual"
   },
   "step1Title": {
-    "ko": "디바이스 선택",
-    "en": "Select Device"
+    "ko": "펌웨어 선택",
+    "en": "Select Firmware"
   },
   "step1Desc": {
-    "ko": "마스터 또는 리시버 장치를 지정하세요.",
-    "en": "Specify the master or receiver device."
+    "ko": "마스터 또는 리시버 펌웨어를 선택하세요.",
+    "en": "Select master or receiver firmware."
   },
   "step2Title": {
     "ko": "주파수 대역",
@@ -57,12 +57,12 @@ const translations = {
     "en": "Run the installation with the selected configuration."
   },
   "panel1Heading": {
-    "ko": "어떤 디바이스의 펌웨어를 설치할까요?",
-    "en": "Which device's firmware will you install?"
+    "ko": "어떤 펌웨어를 설치할까요?",
+    "en": "Which firmware will you install?"
   },
   "panel1Subheading": {
-    "ko": "TALLY NODE는 두 가지 역할로 동작합니다. 업로드할 장치의 역할을 먼저 선택하세요.",
-    "en": "The TALLY NODE operates in two roles. Please select the role of the device to upload to."
+    "ko": "TALLY NODE는 두 가지 역할로 동작합니다. 업로드할 펌웨어를 선택하세요.",
+    "en": "The TALLY NODE operates in two roles. Please select the firmware to upload."
   },
   "masterTitle": {
     "ko": "마스터",
@@ -149,12 +149,12 @@ const translations = {
     "en": "Awaiting Selection"
   },
   "summaryCaptionDefault": {
-    "ko": "장치를 선택하면 요약이 표시됩니다.",
-    "en": "A summary will be displayed once you select the device."
+    "ko": "펌웨어를 선택하면 요약이 표시됩니다.",
+    "en": "A summary will be displayed once you select the firmware."
   },
   "btnReselectDevice": {
-    "ko": "디바이스 다시 선택",
-    "en": "Reselect Device"
+    "ko": "펌웨어 다시 선택",
+    "en": "Reselect Firmware"
   },
   "btnReselectFreq": {
     "ko": "주파수 다시 선택",
@@ -233,8 +233,8 @@ const translations = {
     "en": "Select a frequency band to proceed with the installation."
   },
   "summaryCaptionDefaultJs": {
-    "ko": "장치 유형을 선택해 주세요.",
-    "en": "Please select the device type."
+    "ko": "펌웨어를 선택해 주세요.",
+    "en": "Please select the firmware."
   },
   "masterLabel": {
     "ko": "마스터 (송신기)",
