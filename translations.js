@@ -17,8 +17,8 @@ const translations = {
     "en": "TALLY NODE Firmware Upload"
   },
   "headerSubtitle": {
-    "ko": "브라우저에서 바로 최신 펌웨어를 설치하세요. 장치와 주파수를 선택하면 맞는 매니페스트를 자동으로 적용해 드립니다.",
-    "en": "Install the latest firmware directly from your browser. The correct manifest will be applied automatically when you select the device and frequency."
+    "ko": "브라우저에서 바로 최신 펌웨어를 설치하세요. 장치를 선택하면 맞는 매니페스트를 자동으로 적용해 드립니다.",
+    "en": "Install the latest firmware directly from your browser. The correct manifest will be applied automatically when you select the device."
   },
   "badgeRecommended": {
     "ko": "Chrome · Edge · Opera 권장",
@@ -149,8 +149,8 @@ const translations = {
     "en": "Awaiting Selection"
   },
   "summaryCaptionDefault": {
-    "ko": "장치와 주파수를 모두 선택하면 요약이 표시됩니다.",
-    "en": "A summary will be displayed once you select the device and frequency."
+    "ko": "장치를 선택하면 요약이 표시됩니다.",
+    "en": "A summary will be displayed once you select the device."
   },
   "btnReselectDevice": {
     "ko": "디바이스 다시 선택",
@@ -233,8 +233,8 @@ const translations = {
     "en": "Select a frequency band to proceed with the installation."
   },
   "summaryCaptionDefaultJs": {
-    "ko": "장치 유형과 주파수를 순서대로 선택해 주세요.",
-    "en": "Please select the device type and frequency in order."
+    "ko": "장치 유형을 선택해 주세요.",
+    "en": "Please select the device type."
   },
   "masterLabel": {
     "ko": "마스터 (송신기)",
