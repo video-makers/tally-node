@@ -243,5 +243,17 @@ const translations = {
   "receiverLabel": {
     "ko": "리시버 (수신기)",
     "en": "Receiver (Receiver)"
+  },
+  "linkChangelog": {
+    "ko": "변경 이력",
+    "en": "Changelog"
+  },
+  "linkGithub": {
+    "ko": "GitHub",
+    "en": "GitHub"
+  },
+  "footerCopyright": {
+    "ko": "© 2025 TALLY NODE. All rights reserved.",
+    "en": "© 2025 TALLY NODE. All rights reserved."
   }
 };
