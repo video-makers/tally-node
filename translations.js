@@ -133,16 +133,16 @@ const translations = {
     "en": "Communication will fail if not all devices use the same band."
   },
   "panel3Heading": {
-    "ko": "선택한 구성으로 펌웨어를 업로드합니다",
-    "en": "Upload the firmware with the selected configuration"
+    "ko": "펌웨어를 업로드합니다",
+    "en": "Upload Firmware"
   },
   "panel3Subheading": {
     "ko": "장치를 USB로 연결하고 BOOT 버튼을 누른 상태에서 RESET 버튼을 눌러 부트 모드로 진입하세요. 브라우저에서 포트를 선택하면 업로드가 시작됩니다.",
     "en": "Connect the device via USB, then press and hold the BOOT button while pressing the RESET button to enter boot mode. Select the port in your browser to begin the upload."
   },
   "summaryLabel": {
-    "ko": "현재 구성",
-    "en": "Current Configuration"
+    "ko": "선택한 장치",
+    "en": "Selected Device"
   },
   "summaryTitleDefault": {
     "ko": "선택 대기 중",
@@ -225,8 +225,8 @@ const translations = {
     "en": "{modeLabel} · {freqLabel}"
   },
   "summaryCaptionReady": {
-    "ko": "이 구성을 기준으로 펌웨어가 업로드됩니다.",
-    "en": "Firmware will be uploaded based on this configuration."
+    "ko": "이 장치에 펌웨어가 업로드됩니다.",
+    "en": "Firmware will be uploaded to this device."
   },
   "summaryCaptionNeedFreq": {
     "ko": "주파수 대역을 선택하면 설치를 진행할 수 있습니다.",
